@@ -5,10 +5,11 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Tue Jan 24 18:01:00 2017 timothee.puentes
+** Last update Tue Jan 24 18:06:58 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 int		main(void)
@@ -18,6 +19,7 @@ int		main(void)
   char		*str2;
   char		*str3;
 
+  srandom(10);
   printf("sizeof(%ld)\n", sizeof(t_malloc_header));
   show_alloc_mem();
 
@@ -108,10 +110,28 @@ int		main(void)
   show_alloc_mem();
   
   free(str0);
-  
-  show_alloc_mem();
 
   free(str2);
   
+  show_alloc_mem();
+  
+  char		*test[150];
+  show_alloc_mem(); 
+  c = 0;
+  while (c < 150)
+    test[c++] = malloc(rand() % 6500);
+  show_alloc_mem(); 
+  c = 50;
+  while (c < 100)
+    free(test[c++]);
+  show_alloc_mem(); 
+  c = 0;
+  while (c < 50)
+    free(test[c++]);
+  show_alloc_mem(); 
+  c = 100;
+  while (c < 150)
+    free(test[c++]);
+  show_alloc_mem(); 
   return (0);
 }
