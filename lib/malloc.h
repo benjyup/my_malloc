@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Tue Jan 24 12:50:49 2017 chalie_a
+** Last update Tue Jan 24 14:46:25 2017 puente_t
 */
 
 #ifndef MY_MALLOC_H

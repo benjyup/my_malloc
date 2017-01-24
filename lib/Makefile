@@ -5,7 +5,7 @@
 ## Login   <puente_t@epitech.net>
 ## 
 ## Started on  Wed Jan  4 07:16:58 2017 Timothee Puentes
-## Last update Mon Jan 23 22:23:14 2017 Timothee Puentes
+Last update Tue Jan 24 14:46:58 2017 puente_t
 ##
 
 NAME		=	libmy_malloc.so
