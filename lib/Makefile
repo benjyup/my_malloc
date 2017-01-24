@@ -1,16 +1,8 @@
-##
-## Makefile for c in /home/puente_t/rendu/PISC_CPP/cpp_d01
-## 
-## Made by Timothee Puentes
-## Login   <puente_t@epitech.net>
-## 
-## Started on  Wed Jan  4 07:16:58 2017 Timothee Puentes
-Last update Tue Jan 24 14:46:58 2017 puente_t
-##
+
 
 NAME		=	libmy_malloc.so
 
-SRCS		=	malloc.c
+SRCS		=	malloc.c realloc.c
 
 OBJS		=	$(SRCS:.c=.o)
 

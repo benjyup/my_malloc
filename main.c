@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Tue Jan 24 14:46:30 2017 puente_t
+** Last update Tue Jan 24 18:01:00 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -83,5 +83,35 @@ int		main(void)
   
   show_alloc_mem();
 
+  write(1, "\n\n\n", 3);
+
+  str0 = malloc(100); str0[99] = 0;
+  
+  show_alloc_mem();
+  
+  str0 = realloc(str0, 50); str0[49] = 0;
+
+  show_alloc_mem();
+
+  str1 = malloc(150);
+  
+  str0 = realloc(str0, 75); str0[74] = 0;
+
+  show_alloc_mem();
+
+  free(str1);
+
+  show_alloc_mem();
+
+  str2 = malloc(175); str2[174] = 0;
+
+  show_alloc_mem();
+  
+  free(str0);
+  
+  show_alloc_mem();
+
+  free(str2);
+  
   return (0);
 }
