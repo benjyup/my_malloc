@@ -5,13 +5,31 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Tue Jan 24 18:27:17 2017 timothee.puentes
+** Last update Wed Jan 25 12:24:26 2017 timothee.puentes
 */
 
 #include <stdio.h>
 #include "malloc.h"
 
 static t_malloc_header	*__malloc_head = NULL;
+
+void			*calloc(size_t		nmemb,
+				size_t		size)
+{
+  char			*ptr;
+  size_t		it;
+
+  it = 0;
+  if ((ptr = malloc(nmemb * size)))
+    {
+      while (it < size * nmemb)
+	{
+	  ptr[it] = 0;
+	  it++;
+	}
+    }
+  return ((void*)ptr);
+}
 
 void				show_alloc_mem()
 {
@@ -94,7 +112,6 @@ void				free(void	*ptr)
     {
       if (start->previous)
 	((t_malloc_header*)start->previous)->next = NULL;
-
       brk(start);
     }
   else

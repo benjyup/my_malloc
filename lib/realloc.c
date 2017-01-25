@@ -5,9 +5,10 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Tue Jan 24 17:54:16 2017 timothee.puentes
+** Last update Wed Jan 25 13:31:44 2017 timothee.puentes
 */
 
+#include <stdio.h>
 #include "malloc.h"
 
 void				copy_data(t_malloc_header	*ptr,
@@ -16,16 +17,19 @@ void				copy_data(t_malloc_header	*ptr,
   char				*ptrIt;
   char				*ptr2It;
   size_t			c;
-
+  size_t			size;
+  
+  c = 0;
+  size = ptr2->size;
   ptrIt = (void*)((long)ptr + sizeof(*ptr));
   ptr2It = (void*)((long)ptr2 + sizeof(*ptr2));
-  c = 0;
-  while (c < ptr->size)
+  while (c < size)
     {
       ptrIt[c] = ptr2It[c];
       c++;
     }
 }
+
 
 void				*realloc_free_around(t_malloc_header	*ptr,
 						     size_t		size,
@@ -36,15 +40,15 @@ void				*realloc_free_around(t_malloc_header	*ptr,
   t_malloc_header		*freePart;
 
   start = ((ptr->previous && ((t_malloc_header*)ptr->previous)->free) ?
-	   (ptr) : (ptr->previous));
+	   (ptr->previous) : (ptr));
   end = ((ptr->next && ((t_malloc_header*)ptr->next)->free) ?
-	 (ptr->next) : (((t_malloc_header*)ptr->next)->next));
+	 (((t_malloc_header*)ptr->next)->next) : (ptr->next) );
   if (start != ptr)
     copy_data(start, ptr);
   start->size = size;
+  start->free = false;
   if (sizeAviable - size > sizeof(*start))
     {
-      start->size = size;
       freePart = (void*)((long)start + sizeof(*start) + size);
       start->next = freePart;
       if (end)
@@ -53,6 +57,7 @@ void				*realloc_free_around(t_malloc_header	*ptr,
       freePart->next = end;
       freePart->previous = start;
       freePart->size = sizeAviable - size - sizeof(*start);
+      write(1, "2\n", 2);
       free((void*)((long)freePart + sizeof(*freePart)));
     }
   else

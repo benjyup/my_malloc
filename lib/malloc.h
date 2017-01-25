@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Tue Jan 24 18:00:29 2017 timothee.puentes
+** Last update Wed Jan 25 12:42:39 2017 timothee.puentes
 */
 
 #ifndef MY_MALLOC_H
@@ -20,7 +20,11 @@ typedef struct	        s_malloc_header
   char			free;
   void			*next;
   void			*previous;
-}			__attribute__((packed)) t_malloc_header;
+}			//__attribute__((packed))
+  t_malloc_header;
+
+void			*calloc(size_t		nmemb,
+				size_t		size);
 
 void			*malloc(size_t		size);
 
