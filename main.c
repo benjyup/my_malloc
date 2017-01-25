@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Wed Jan 25 13:35:33 2017 timothee.puentes
+** Last update Wed Jan 25 14:50:22 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -24,7 +24,7 @@ int		main(void)
   int		testfree[150];
   size_t	size, i;
 
-  srandom(2);
+  srandom(50);
   if (0)
     {
       printf("sizeof(%ld)\n", sizeof(t_malloc_header));
@@ -162,13 +162,16 @@ int		main(void)
       size = (rand() % 100 + 1) * 10000;
       if (testfree[c] == 0)
 	{
-	  test[c] = malloc(size + 1);
+	  test[c] = calloc(size + 1, sizeof(*test[c]));
 	  testfree[c] = 1;
-	  printf("Malloc %p\n", test[c]); 
+	  printf("Malloc %p\n", test[c]);
 	}
       else if (rand() % 2)
 	{
 	  test[c] = realloc(test[c], size);
+	  size_t		y = 0;
+	  while (y < size)
+	    test[c][y++] = 0;
 	  printf("Realloc %p\n", test[c]); 
 	}
       else
@@ -178,7 +181,7 @@ int		main(void)
 	  printf("Free %p\n", test[c]); 
 	  test[c] = NULL;
 	}
-      //show_alloc_mem(); 
+      show_alloc_mem(); 
     }
   
   return (0);

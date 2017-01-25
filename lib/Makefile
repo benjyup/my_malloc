@@ -1,4 +1,12 @@
-
+##
+## Makefile for  in /home/puente_t/rendu/PSU_2016_malloc/lib
+## 
+## Made by timothee.puentes
+## Login   <puente_t@epitech.net>
+## 
+## Started on  Wed Jan 25 15:01:26 2017 timothee.puentes
+## Last update Wed Jan 25 15:01:28 2017 timothee.puentes
+##
 
 NAME		=	libmy_malloc.so
 
