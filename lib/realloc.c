@@ -5,7 +5,7 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Wed Jan 25 13:31:44 2017 timothee.puentes
+** Last update Wed Jan 25 17:41:23 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -78,12 +78,15 @@ void				*realloc(void	*ptrOri,
   t_malloc_header		*ptr2;
   size_t			sizeAviable;
   
+  if (ptrOri == NULL)
+    return (malloc(size));
   ptr = (void*)((long)ptrOri - sizeof(*ptr));
   if (size < ptr->size)
     {
       if (ptr->size - size <= sizeof(t_malloc_header))
-	return ((void*)((long)ptr + sizeof(*ptr)));
-
+	{
+	  return ((void*)((long)ptr + sizeof(*ptr)));
+	}
       ptr2 = (void*)((long)ptr + sizeof(*ptr) + size);
       ptr2->size = ptr->size - size - sizeof(t_malloc_header);
       

@@ -5,12 +5,12 @@
 ## Login   <puente_t@epitech.net>
 ## 
 ## Started on  Wed Jan 25 15:01:26 2017 timothee.puentes
-## Last update Wed Jan 25 15:01:28 2017 timothee.puentes
 ##
 
 NAME		=	libmy_malloc.so
 
-SRCS		=	malloc.c realloc.c
+SRCS		=	malloc.c realloc.c \
+			my_putchar.c my_putstr.c my_put_nbr.c my_power.c my_strlen.c
 
 OBJS		=	$(SRCS:.c=.o)
 

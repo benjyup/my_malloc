@@ -5,13 +5,13 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Wed Jan 25 12:24:26 2017 timothee.puentes
+** Last update Wed Jan 25 17:48:43 2017 timothee.puentes
 */
 
 #include <stdio.h>
 #include "malloc.h"
 
-static t_malloc_header	*__malloc_head = NULL;
+t_malloc_header	*__malloc_head;
 
 void			*calloc(size_t		nmemb,
 				size_t		size)
@@ -39,11 +39,11 @@ void				show_alloc_mem()
   printf("break: %p\n", sbrk(0));
   while (ptr)
     {
-      //if (!ptr->free)
+      if (!ptr->free)
 	printf("%p - %p : %ld bytes%s\n",
 	       (void*)((long)ptr + sizeof(*ptr)),
-	       (void*)((long)ptr + sizeof(*ptr) + ptr->size),
-	       ptr->size, ((ptr->free) ? (" freed") : ("")));
+	       (void*)((long)ptr + sizeof(*ptr) + ptr->size));
+	       //, ptr->size, ((ptr->free) ? (" freed") : ("")));
       ptr = ptr->next;
     }
 }
@@ -55,7 +55,7 @@ void				*malloc(size_t	size)
 
   ptr = __malloc_head;
   while (ptr != NULL && ptr->next != NULL && !(ptr->size >= size && ptr->free))
-    ptr = ptr->next;
+      ptr = ptr->next;
   if (ptr == NULL || ptr->next == NULL)
     {
       if (!(ptr2 = sbrk(sizeof(*ptr) + size)))
@@ -68,7 +68,7 @@ void				*malloc(size_t	size)
 	__malloc_head = ptr2;
       else
 	ptr->next = ptr2;
-      return ((void*)((long)ptr2 + sizeof(*ptr)));
+      return (ptr2 + 1);
     }
   if (size + sizeof(t_malloc_header) < ptr->size)
     {
@@ -83,7 +83,7 @@ void				*malloc(size_t	size)
       ptr->size = size;
     }
   ptr->free = false;
-  return ((void*)((long)ptr + sizeof(*ptr)));
+  return (ptr + 1);
 }
 
 //
@@ -98,6 +98,8 @@ void				free(void	*ptr)
   t_malloc_header		*end;
   t_malloc_header		*start;
 
+  if (ptr == NULL)
+    return ;
   header = ptr - sizeof(*header);
   header->free = true;
   end = header;
@@ -106,7 +108,7 @@ void				free(void	*ptr)
   start = header;
   while (start->previous != NULL && ((t_malloc_header*)start->previous)->free)
     start = start->previous; 
-  if (start->previous == NULL && end == NULL)
+  if (start->previous == NULL && (end == NULL || end->next == NULL))
     __malloc_head = NULL;
   if (!end->next && end->free)
     {
