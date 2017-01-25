@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Wed Jan 25 17:48:43 2017 timothee.puentes
+** Last update Wed Jan 25 17:55:15 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -40,10 +40,10 @@ void				show_alloc_mem()
   while (ptr)
     {
       if (!ptr->free)
-	printf("%p - %p : %ld bytes%s\n",
+	printf("%p - %p : %ld bytes\n",
 	       (void*)((long)ptr + sizeof(*ptr)),
-	       (void*)((long)ptr + sizeof(*ptr) + ptr->size));
-	       //, ptr->size, ((ptr->free) ? (" freed") : ("")));
+	       (void*)((long)ptr + sizeof(*ptr) + ptr->size)
+	       , ptr->size);//, ((ptr->free) ? (" freed") : ("")));
       ptr = ptr->next;
     }
 }
