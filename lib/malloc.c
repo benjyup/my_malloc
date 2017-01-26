@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Wed Jan 25 17:55:15 2017 timothee.puentes
+** Last update Thu Jan 26 10:26:33 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -52,7 +52,7 @@ void				*malloc(size_t	size)
 {
   t_malloc_header		*ptr;
   t_malloc_header		*ptr2;
-
+  
   ptr = __malloc_head;
   while (ptr != NULL && ptr->next != NULL && !(ptr->size >= size && ptr->free))
       ptr = ptr->next;
@@ -86,12 +86,6 @@ void				*malloc(size_t	size)
   return (ptr + 1);
 }
 
-//
-// End = First non-freed
-//
-// Start = First Free
-//
-
 void				free(void	*ptr)
 {
   t_malloc_header		*header;
@@ -114,12 +108,10 @@ void				free(void	*ptr)
     {
       if (start->previous)
 	((t_malloc_header*)start->previous)->next = NULL;
-      brk(start);
+      sbrk(-((long)start + start->size));
+      return ;
     }
-  else
-    {
-      start->size = ((long)end - ((long)start + sizeof(*start)));
-      start->next = end;
-      end->previous = start;
-    }
+  start->size = ((long)end - ((long)start + sizeof(*start)));
+  start->next = end;
+  end->previous = start;
 }

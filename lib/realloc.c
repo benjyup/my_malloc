@@ -5,13 +5,13 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Wed Jan 25 17:41:23 2017 timothee.puentes
+** Last update Thu Jan 26 10:27:48 2017 timothee.puentes
 */
 
 #include <stdio.h>
 #include "malloc.h"
 
-void				copy_data(t_malloc_header	*ptr,
+static void			copy_data(t_malloc_header	*ptr,
 					  t_malloc_header	*ptr2)
 {
   char				*ptrIt;
@@ -21,8 +21,8 @@ void				copy_data(t_malloc_header	*ptr,
   
   c = 0;
   size = ptr2->size;
-  ptrIt = (void*)((long)ptr + sizeof(*ptr));
-  ptr2It = (void*)((long)ptr2 + sizeof(*ptr2));
+  ptrIt = (void*)(ptr + 1);
+  ptr2It = (void*)(ptr2 + 1);
   while (c < size)
     {
       ptrIt[c] = ptr2It[c];
@@ -31,7 +31,7 @@ void				copy_data(t_malloc_header	*ptr,
 }
 
 
-void				*realloc_free_around(t_malloc_header	*ptr,
+static void			*realloc_free_around(t_malloc_header	*ptr,
 						     size_t		size,
 						     size_t		sizeAviable)
 {
@@ -57,8 +57,7 @@ void				*realloc_free_around(t_malloc_header	*ptr,
       freePart->next = end;
       freePart->previous = start;
       freePart->size = sizeAviable - size - sizeof(*start);
-      write(1, "2\n", 2);
-      free((void*)((long)freePart + sizeof(*freePart)));
+      free(freePart + 1);
     }
   else
     {
@@ -67,7 +66,7 @@ void				*realloc_free_around(t_malloc_header	*ptr,
       if (end)
 	end->previous = start;
     }
-  return ((void*)((long)start + sizeof(*start)));
+  return (start + 1);
 }
 
 void				*realloc(void	*ptrOri,
@@ -84,9 +83,7 @@ void				*realloc(void	*ptrOri,
   if (size < ptr->size)
     {
       if (ptr->size - size <= sizeof(t_malloc_header))
-	{
-	  return ((void*)((long)ptr + sizeof(*ptr)));
-	}
+	return (ptrOri);
       ptr2 = (void*)((long)ptr + sizeof(*ptr) + size);
       ptr2->size = ptr->size - size - sizeof(t_malloc_header);
       
@@ -98,8 +95,8 @@ void				*realloc(void	*ptrOri,
 	((t_malloc_header*)ptr->next)->previous = ptr2;
       ptr2->previous = ptr;
       ptr2->free = false;
-      free((void*)((long)ptr2 + sizeof(*ptr2)));
-      return ((void*)((long)ptr + sizeof(*ptr)));
+      free(ptr2 + 1);
+      return (ptr + 1);
     }
   else if (size > ptr->size)
     {
