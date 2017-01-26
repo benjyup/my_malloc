@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Thu Jan 26 14:45:30 2017 timothee.puentes
+** Last update Thu Jan 26 16:29:10 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -44,8 +44,59 @@ void				show_alloc_mem()
 	       (void*)((long)ptr + sizeof(*ptr)),
 	       (void*)((long)ptr + sizeof(*ptr) + ptr->size)
 	       , ptr->size);
+      else
+	printf("%p - %p : %ld bytes freed\n",
+	       (void*)((long)ptr + sizeof(*ptr)),
+	       (void*)((long)ptr + sizeof(*ptr) + ptr->size)
+	       , ptr->size);
       ptr = ptr->next;
     }
+}
+
+void				*malloc_at_end(size_t		size,
+					       t_malloc_header	*ptr)
+{
+  size_t			nb_pages;
+  t_malloc_header		*ptr2;
+  t_malloc_header		*end;
+
+  if (ptr && ptr->free)
+    nb_pages = size - ptr->size;
+  else
+    nb_pages = (sizeof(*ptr) + size);
+  nb_pages /= getpagesize();
+  nb_pages += 1;
+  if (!(ptr2 = sbrk(nb_pages * getpagesize())))
+    return (NULL);
+  end = (void*)((long)ptr2 + (nb_pages * getpagesize()));
+  if (ptr && ptr->free)
+    {
+      ptr2 = ptr;
+      ptr = ptr->previous;
+    }
+  //    ptr2 = (void*)((long)ptr2 - sizeof(*ptr) - ptr->size);
+  ptr2->free = false;
+  ptr2->previous = ptr;
+  if (ptr == NULL)
+    __malloc_head = ptr2;
+  else
+    ptr->next = ptr2;
+  if ((size_t)end > sizeof(*ptr2) + (long)ptr2 + sizeof(*ptr2) + size)
+    {
+      ptr2->size = size;
+      ptr = (void*)((long)ptr2 + sizeof(*ptr2) + ptr2->size);
+      ptr2->next = ptr;
+      ptr->previous = ptr2;
+      ptr->next = NULL;
+      ptr->free = true;
+      ptr->size = (nb_pages * getpagesize()) - size - sizeof(*ptr2);
+    }
+  else
+    {
+      ptr2->size = (long)ptr2 + sizeof(*ptr2) - (long)end;
+      ptr2->next = NULL;      
+    }
+  return (ptr2 + 1);
 }
 
 void				*malloc(size_t	size)
@@ -57,19 +108,7 @@ void				*malloc(size_t	size)
   while (ptr != NULL && ptr->next != NULL && !(ptr->size >= size && ptr->free))
       ptr = ptr->next;
   if (ptr == NULL || ptr->next == NULL)
-    {
-      if (!(ptr2 = sbrk(sizeof(*ptr) + size)))
-	return (NULL);
-      ptr2->free = false;
-      ptr2->next = NULL;
-      ptr2->previous = ((ptr == NULL) ? (NULL) : (ptr));
-      if (ptr == NULL)
-	__malloc_head = ptr2;
-      else
-	ptr->next = ptr2;
-      ptr2->size = size;
-      return (ptr2 + 1);
-    }
+    return (malloc_at_end(size, ptr));
   if (size + sizeof(t_malloc_header) < ptr->size)
     {
       ptr2 = (void*)((long)ptr + sizeof(*ptr) + (long)(size));
@@ -106,10 +145,14 @@ void				free(void	*ptr)
     __malloc_head = NULL;
   if (!end->next && end->free)
     {
-      if (start->previous)
-	((t_malloc_header*)start->previous)->next = NULL;
-      sbrk((long)sbrk(0) - (long)start);
-      return ;
+      size_t			nb_pages;
+      if ((nb_pages = ((long)sbrk(0) - (long)start) / getpagesize()))
+	{
+	  if (start->previous)
+	    ((t_malloc_header*)start->previous)->next = NULL;
+	  sbrk(nb_pages * getpagesize());
+	  return ;
+	}
     }
   start->size = ((long)end - ((long)start + sizeof(*start)));
   start->next = end;

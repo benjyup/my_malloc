@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Thu Jan 26 14:47:55 2017 timothee.puentes
+** Last update Thu Jan 26 16:22:24 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -163,11 +163,11 @@ int		main(void)
       if (testfree[c] == 0)
 	{
 	  printf("Malloc %p : %ld\n", test[c], size);
-	  test[c] = calloc(size, sizeof(*test[c]));
+	  test[c] = malloc(size * sizeof(*test[c]));
 	  testfree[c] = 1;
 	  printf("Malloc %p : %ld\n", test[c], size);
 	}
-      else if (rand() % 2)
+      else if (0 && rand() % 2)
 	{
 	  printf("Realloc %p : %ld\n", test[c], size); 
 	  test[c] = realloc(test[c], size);
