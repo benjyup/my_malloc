@@ -5,7 +5,7 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Thu Jan 26 15:53:16 2017 timothee.puentes
+** Last update Thu Jan 26 18:32:14 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -39,13 +39,13 @@ static void			*realloc_free_around(t_malloc_header	*ptr,
   t_malloc_header		*end;
   t_malloc_header		*freePart;
 
-  start = ((ptr->previous && ((t_malloc_header*)ptr->previous)->free) ?
+  start = ((ptr->previous && ptr->previous->free) ?
 	   (ptr->previous) : (ptr));
-  end = ((ptr->next && ((t_malloc_header*)ptr->next)->free) ?
-	 (((t_malloc_header*)ptr->next)->next) : (ptr->next) );
+  end = ((ptr->next && ptr->next->free) ?
+	 (ptr->next->next) : (ptr->next) );
   if (start != ptr)
     copy_data(start, ptr);
-  start->size = size;
+  start->size =size;
   start->free = false;
   if (sizeAviable - size > sizeof(*start))
     {
@@ -77,7 +77,7 @@ void				*realloc(void	*ptrOri,
   t_malloc_header		*ptr2;
   size_t			sizeAviable;
 
-  if (size == 0)
+  if (size <= 0)
     {
       free(ptrOri);
       return (NULL);
@@ -91,13 +91,11 @@ void				*realloc(void	*ptrOri,
 	return (ptrOri);
       ptr2 = (void*)((long)ptr + sizeof(*ptr) + size);
       ptr2->size = ptr->size - size - sizeof(t_malloc_header);
-      
       ptr->size = size;
-
       ptr2->next = ptr->next;
       ptr->next = ptr2;
       if (ptr->next)
-	((t_malloc_header*)ptr->next)->previous = ptr2;
+	ptr->next->previous = ptr2;
       ptr2->previous = ptr;
       ptr2->free = false;
       free(ptr2 + 1);
@@ -105,24 +103,38 @@ void				*realloc(void	*ptrOri,
     }
   else if (size > ptr->size)
     {
-      if ((ptr->previous && ((t_malloc_header*)ptr->previous)->free) ||
-	  (ptr->next && ((t_malloc_header*)ptr->next)->free))
+      if ((ptr->previous && ptr->previous->free) ||
+	  (ptr->next && ptr->next->free))
 	{
 	  sizeAviable = ptr->size;
-	  sizeAviable += ((ptr->next && ((t_malloc_header*)ptr->next)->free)
-			  ? (((t_malloc_header*)ptr->next)->size + sizeof(*ptr)) : (0));
-	  sizeAviable += ((ptr->previous && ((t_malloc_header*)ptr->previous)->free)
-			  ? (((t_malloc_header*)ptr->previous)->size + sizeof(*ptr)) : (0));
+	  sizeAviable += ((ptr->next && ptr->next->free)
+			  ? (ptr->next->size + sizeof(*ptr)) : (0));
+	  sizeAviable += ((ptr->previous && ptr->previous->free)
+			  ? (ptr->previous->size + sizeof(*ptr)) : (0));
 	  if (sizeAviable >= size)
 	    return (realloc_free_around(ptr, size, sizeAviable));
 	}
       if (!ptr->next)
 	{
-	  sbrk(size - ptr->size);
-	  ptr->size = size;
+	  sizeAviable = size - ptr->size;
+	  if (!sbrk(sizeAviable / getpagesize() + 1))
+	    return (NULL);
+	  sizeAviable %= getpagesize();
+	  ptr2 = (void*)((long)(ptr + 1) + ptr->size);
+	  if (sizeAviable <= sizeof(*ptr))
+	    {
+	      ptr->size = size + sizeAviable;
+	      ptr2->next = NULL;
+	      ptr->next = ptr2;
+	      ptr2->previous = ptr;
+	      ptr2->free = true;
+	      ptr2->size = sizeAviable - sizeof(*ptr);
+	    }
+	  else
+	    ptr->size = size;
 	  return (ptrOri);
 	}
-      if (!(newPtr = malloc(size)))
+      else if (!(newPtr = malloc(size)))
 	return (NULL);
       copy_data((void*)((long)newPtr - sizeof(*newPtr)), ptr);
       free(ptrOri);
@@ -130,3 +142,4 @@ void				*realloc(void	*ptrOri,
     }
   return (ptrOri);
 }
+  

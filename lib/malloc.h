@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Wed Jan 25 17:56:41 2017 timothee.puentes
+** Last update Thu Jan 26 16:57:55 2017 timothee.puentes
 */
 
 #ifndef MY_MALLOC_H
@@ -15,13 +15,15 @@
 # include <stdbool.h>
 # include "my.h"
 
-typedef struct	        s_malloc_header
+typedef struct			s_malloc_header
 {
-  size_t		size;
-  char			free;
-  void			*next;
-  void			*previous;
-}			__attribute__((packed)) t_malloc_header;
+  size_t			size;
+  char				free;
+  struct s_malloc_header	*next;
+  struct s_malloc_header	*previous;
+}				t_malloc_header;
+
+//__attribute__((packed))
 
 extern t_malloc_header	*__malloc_head;
 

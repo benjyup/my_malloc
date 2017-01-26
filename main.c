@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Thu Jan 26 16:22:24 2017 timothee.puentes
+** Last update Thu Jan 26 17:48:32 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -25,36 +25,40 @@ int		main(void)
   size_t	size, i;
 
   srandom(50);
-  if (0)
+  if (1)
     {
       printf("sizeof(%ld)\n", sizeof(t_malloc_header));
       show_alloc_mem();
 
       str0 = malloc(100); str0[0] = 0;
+      show_alloc_mem();
       str1 = malloc(15); str1[0] = 0;
+      show_alloc_mem();
       str2 = malloc(1000); str2[0] = 0;
+      show_alloc_mem();
       str3 = malloc(10); str3[0] = 0;
-  
-      printf("str0 %p %ld\n", str0, (long)str0);
-      printf("str1 %p %ld\n", str1, (long)str1);
-      printf("str2 %p %ld\n", str2, (long)str2);
-      printf("str3 %p %ld\n", str3, (long)str3);
-
       show_alloc_mem();
-
+      my_putstr("\n\n");
+      
       free(str0);
-      free(str1);
-      free(str2);
-      free(str3);
-
       show_alloc_mem();
-
+      free(str1);
+      show_alloc_mem();
+      free(str2);
+      show_alloc_mem();
+      free(str3);
+      show_alloc_mem();
+      
       //return (1);
 
       str0 = malloc(11); str0[0] = 0;
+      show_alloc_mem();
       str1 = malloc(560); str1[0] = 0;
+      show_alloc_mem();
       str2 = malloc(12); str2[0] = 0;
+      show_alloc_mem();
       str3 = malloc(13); str3[0] = 0;
+      show_alloc_mem();
   
       //return (1);
   
@@ -74,7 +78,9 @@ int		main(void)
 	}
 
       show_alloc_mem();
-  
+
+      //return (0);
+      
       c = 0;
       while (c < 10)
 	{
@@ -109,35 +115,37 @@ int		main(void)
       free(str2);
     
       show_alloc_mem();
-  
+
+      //return (0);
+      
       printf("%d\n", getpagesize());
   
-      show_alloc_mem();
+      //show_alloc_mem();
       c = 0;
       while (c < 150)
 	{
 	  i = 0;
 	  size = (rand() % 6500 + 1) * 1000;
 	  test[c] = malloc(size);
-	  show_alloc_mem();
+	  //show_alloc_mem();
 	  while (i < size)
 	    test[c][i++] = 0;
 	  c++;
 	}
-      show_alloc_mem(); 
       c = 50;
       while (c < 100)
 	free(test[c++]);
-      show_alloc_mem(); 
       c = 0;
       while (c < 50)
 	free(test[c++]);
-      show_alloc_mem(); 
       c = 100;
       while (c < 150)
-	free(test[c++]);
-      show_alloc_mem(); 
-
+	{
+	  free(test[c++]);
+	  show_alloc_mem(); 
+	}
+      //return (0);
+      
       str0 = malloc(120 + 1);
       c = 0;
       while (c < 120)
@@ -149,7 +157,8 @@ int		main(void)
       printf("Test %s\n", str0);
       free(str0);
     }
-
+  //return (0);
+  
   c = 0;
   while (c < 10)
     {
@@ -163,7 +172,7 @@ int		main(void)
       if (testfree[c] == 0)
 	{
 	  printf("Malloc %p : %ld\n", test[c], size);
-	  test[c] = malloc(size * sizeof(*test[c]));
+	  test[c] = calloc(size, sizeof(*test[c]));
 	  testfree[c] = 1;
 	  printf("Malloc %p : %ld\n", test[c], size);
 	}
