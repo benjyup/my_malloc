@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Thu Jan 26 10:26:33 2017 timothee.puentes
+** Last update Thu Jan 26 14:45:30 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -43,7 +43,7 @@ void				show_alloc_mem()
 	printf("%p - %p : %ld bytes\n",
 	       (void*)((long)ptr + sizeof(*ptr)),
 	       (void*)((long)ptr + sizeof(*ptr) + ptr->size)
-	       , ptr->size);//, ((ptr->free) ? (" freed") : ("")));
+	       , ptr->size);
       ptr = ptr->next;
     }
 }
@@ -60,7 +60,6 @@ void				*malloc(size_t	size)
     {
       if (!(ptr2 = sbrk(sizeof(*ptr) + size)))
 	return (NULL);
-      ptr2->size = size;
       ptr2->free = false;
       ptr2->next = NULL;
       ptr2->previous = ((ptr == NULL) ? (NULL) : (ptr));
@@ -68,6 +67,7 @@ void				*malloc(size_t	size)
 	__malloc_head = ptr2;
       else
 	ptr->next = ptr2;
+      ptr2->size = size;
       return (ptr2 + 1);
     }
   if (size + sizeof(t_malloc_header) < ptr->size)
@@ -108,7 +108,7 @@ void				free(void	*ptr)
     {
       if (start->previous)
 	((t_malloc_header*)start->previous)->next = NULL;
-      sbrk(-((long)start + start->size));
+      sbrk((long)sbrk(0) - (long)start);
       return ;
     }
   start->size = ((long)end - ((long)start + sizeof(*start)));
