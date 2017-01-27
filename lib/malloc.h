@@ -5,15 +5,15 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Thu Jan 26 16:57:55 2017 timothee.puentes
+** Last update Fri Jan 27 11:10:11 2017 timothee.puentes
 */
 
 #ifndef MY_MALLOC_H
 # define MY_MALLOC_H
 
 # include <unistd.h>
+# include <stdio.h>
 # include <stdbool.h>
-# include "my.h"
 
 typedef struct			s_malloc_header
 {
@@ -34,6 +34,10 @@ void			*malloc(size_t		size);
 
 void			*realloc(void		*ptr,
 				 size_t		size);
+
+void			*realloc_size_superior(void		*ptrOri,
+					       t_malloc_header	*ptr,
+					       size_t		size);
 
 void			free(void		*ptr);
 

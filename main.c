@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Thu Jan 26 20:09:21 2017 timothee.puentes
+** Last update Fri Jan 27 11:12:16 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -38,8 +38,7 @@ int		main(void)
       show_alloc_mem();
       str3 = malloc(10); str3[0] = 0;
       show_alloc_mem();
-      my_putstr("\n\n");
-      
+
       free(str0);
       show_alloc_mem();
       free(str1);

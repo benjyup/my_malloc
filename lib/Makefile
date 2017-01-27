@@ -9,8 +9,7 @@
 
 NAME		=	libmy_malloc.so
 
-SRCS		=	malloc.c realloc.c \
-			my_putchar.c my_putstr.c my_put_nbr.c my_power.c my_strlen.c
+SRCS		=	malloc.c realloc.c realloc_sup.c free.c
 
 OBJS		=	$(SRCS:.c=.o)
 
