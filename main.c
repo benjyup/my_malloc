@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Thu Jan 26 17:48:32 2017 timothee.puentes
+** Last update Thu Jan 26 20:09:21 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -160,15 +160,16 @@ int		main(void)
   //return (0);
   
   c = 0;
-  while (c < 10)
+  while (c < 25)
     {
       test[c] = NULL;
       testfree[c++] = 0;
     }
   while (1)
     {
-      c = rand() % 10;
-      size = (rand() % 100 + 1) * 10000;
+      c = rand() % 25;
+      size = (rand() % 1000 + 1) * ((rand() % 100) ? (1) : (1000));
+
       if (testfree[c] == 0)
 	{
 	  printf("Malloc %p : %ld\n", test[c], size);

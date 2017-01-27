@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Thu Jan 26 18:30:56 2017 timothee.puentes
+** Last update Fri Jan 27 10:43:32 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -29,6 +29,28 @@ void			*calloc(size_t		nmemb,
 	}
     }
   return ((void*)ptr);
+}
+
+void				show_alloc_mem_()
+{
+  t_malloc_header		*ptr;
+
+  my_putstr("Print :\n");
+  my_put_nbr((long)sbrk(0));
+  my_putchar('\n');
+  ptr = __malloc_head;
+  while (ptr)
+    {
+      my_put_nbr((long)ptr + 1);
+      my_putstr(" - ");
+      my_put_nbr(((long)ptr + 1) + ptr->size);
+      my_putstr(" : ");
+      my_put_nbr((long)ptr->size);
+      if (ptr->free)
+	my_putstr(" freed");
+      my_putchar('\n');
+      ptr = ptr->next;
+    }
 }
 
 void				show_alloc_mem()
@@ -99,21 +121,21 @@ void				*malloc(size_t	size)
 {
   t_malloc_header		*ptr;
   t_malloc_header		*ptr2;
-  
+
   ptr = __malloc_head;
   while (ptr != NULL && ptr->next != NULL && !(ptr->size >= size && ptr->free))
-      ptr = ptr->next;
+    ptr = ptr->next;
   if (ptr == NULL || ptr->next == NULL)
     return (malloc_at_end(size, ptr));
   if (size + sizeof(t_malloc_header) < ptr->size)
     {
-      ptr2 = (void*)((long)ptr + sizeof(*ptr) + (long)(size));
+      ptr2 = (void*)((long)(ptr + 1) + size);
       ptr2->free = true;
-      ptr2->next = ptr->next;
       ptr2->previous = ptr;
-      if (ptr2->next)
+      ptr2->size = ptr->size - size - sizeof(*ptr2);      
+      ptr2->next = ptr->next;
+      if (ptr2 && ptr2->next)
 	ptr2->next->previous = ptr2;
-      ptr2->size = ptr->size - size - sizeof(*ptr2);
       ptr->next = ptr2;
       ptr->size = size;
     }
@@ -149,7 +171,7 @@ void				free(void	*ptr)
 	{
 	  leftover = size % getpagesize();
 	  start->size = leftover;
-	  if (leftover == 0 && start->previous)
+	  if ((leftover == 0 && start->previous) || (leftover <= sizeof(t_malloc_header) && start->previous))
 	    start->previous->next = NULL;
 	  else if (leftover == 0)
 	    __malloc_head = NULL;

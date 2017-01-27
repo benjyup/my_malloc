@@ -5,7 +5,7 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Thu Jan 26 18:32:14 2017 timothee.puentes
+** Last update Fri Jan 27 10:43:00 2017 timothee.puentes
 */
 
 #include <stdio.h>
@@ -136,7 +136,7 @@ void				*realloc(void	*ptrOri,
 	}
       else if (!(newPtr = malloc(size)))
 	return (NULL);
-      copy_data((void*)((long)newPtr - sizeof(*newPtr)), ptr);
+      copy_data((void*)((long)newPtr - sizeof(t_malloc_header)), ptr);
       free(ptrOri);
       return (newPtr);
     }
