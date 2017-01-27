@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Fri Jan 27 11:12:16 2017 timothee.puentes
+** Last update Fri Jan 27 11:43:32 2017 timothee.puentes
 */
 
 #include "lib/malloc.h"
@@ -182,8 +182,10 @@ int		main(void)
 	  test[c] = realloc(test[c], size);
 	  size_t		y = 0;
 	  while (y < size)
-	    test[c][y++] = 0;
-	  printf("Realloc %p : %ld\n", test[c], size); 
+	    {
+	      test[c][y++] = 0;
+	      printf("Realloc %p : %ld\n", test[c], y); 
+	    }
 	}
       else
 	{

@@ -5,10 +5,14 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 11:06:39 2017 timothee.puentes
-** Last update Fri Jan 27 11:10:52 2017 timothee.puentes
+** Last update Fri Jan 27 11:37:08 2017 timothee.puentes
 */
 
 #include "malloc.h"
+
+t_malloc_header		*__malloc_head;
+size_t			__pageSize;
+void			*__break;
 
 static void			copy_data(t_malloc_header	*ptr,
 					  t_malloc_header	*ptr2)
@@ -84,9 +88,10 @@ static void			*realloc_at_end(void			*ptrOri,
   t_malloc_header		*ptr2;
   
   sizeAviable = size - ptr->size;
-  if (!sbrk(sizeAviable / getpagesize() + 1))
+  if (!(__break = sbrk(sizeAviable / __pageSize + 1)))
     return (NULL);
-  sizeAviable %= getpagesize();
+  __break = (void*)((long)__break + sizeAviable / __pageSize + 1);
+  sizeAviable %= __pageSize;
   ptr2 = (void*)((long)(ptr + 1) + ptr->size);
   if (sizeAviable <= sizeof(*ptr))
     {

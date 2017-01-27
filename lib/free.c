@@ -5,34 +5,46 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 10:50:55 2017 timothee.puentes
-** Last update Fri Jan 27 10:53:56 2017 timothee.puentes
+** Last update Fri Jan 27 11:48:58 2017 timothee.puentes
 */
 
 #include "malloc.h"
 
+t_malloc_header		*__malloc_head;
+size_t			__pageSize;
+void			*__break;
+
+static void			free_sbrk(t_malloc_header	*start,
+					  size_t		size)
+{
+  size_t			leftover;
+
+  leftover = size % __pageSize;
+  start->size = leftover;
+  if ((leftover == 0 && start->previous) ||
+      (leftover <= sizeof(t_malloc_header) && start->previous))
+    start->previous->next = NULL;
+  else if (leftover == 0)
+    __malloc_head = NULL;
+  if (leftover <= sizeof(t_malloc_header) && start->previous)
+    start->previous->size += leftover;
+  else
+    start->size -= sizeof(t_malloc_header);
+  start->next = NULL;
+  __break = sbrk(-(size - leftover));
+  __break = (void*)((long)__break - (size - leftover));
+  return ;
+}
+
 static void			free_end(t_malloc_header	*start,
 					 t_malloc_header	*end)
 {
-  size_t			leftover;
-  size_t			nb_pages;
   size_t			size;
 
-  size = ((long)sbrk(0) - (long)start);
-  if ((nb_pages = size / getpagesize()))
+  size = ((long)__break - (long)start);
+  if (size / __pageSize != 0)
     {
-      leftover = size % getpagesize();
-      start->size = leftover;
-      if ((leftover == 0 && start->previous) ||
-	  (leftover <= sizeof(t_malloc_header) && start->previous))
-	start->previous->next = NULL;
-      else if (leftover == 0)
-	__malloc_head = NULL;
-      if (leftover <= sizeof(t_malloc_header) && start->previous)
-	start->previous->size += leftover;
-      else
-	start->size -= sizeof(t_malloc_header);
-      start->next = NULL;
-      sbrk(-(size - leftover));
+      free_sbrk(start, size);
       return ;
     }
   start->size = ((long)(end + 1) + end->size -
