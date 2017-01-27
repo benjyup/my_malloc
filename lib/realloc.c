@@ -5,10 +5,9 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Fri Jan 27 11:06:30 2017 timothee.puentes
+** Last update Fri Jan 27 12:52:00 2017 timothee.puentes
 */
 
-#include <stdio.h>
 #include "malloc.h"
 
 static void			*realloc_size_inferior(void		*ptrOri,
@@ -36,7 +35,8 @@ void				*realloc(void	*ptrOri,
 					 size_t	size)
 {
   t_malloc_header		*ptr;
-
+  void				*tmp;
+  
   if (size <= 0)
     {
       free(ptrOri);
@@ -46,9 +46,11 @@ void				*realloc(void	*ptrOri,
     return (malloc(size));
   ptr = (void*)((long)ptrOri - sizeof(*ptr));
   if (size < ptr->size)
-    return (realloc_size_inferior(ptrOri, ptr, size));
+    tmp = realloc_size_inferior(ptrOri, ptr, size);
   else if (size > ptr->size)
-    return (realloc_size_superior(ptrOri, ptr, size));
-  return (ptrOri);
+    tmp = realloc_size_superior(ptrOri, ptr, size);
+  else
+    tmp = ptrOri;
+  return (tmp);
 }
   

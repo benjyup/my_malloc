@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 10:50:55 2017 timothee.puentes
-** Last update Fri Jan 27 11:48:58 2017 timothee.puentes
+** Last update Fri Jan 27 12:50:02 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -33,7 +33,6 @@ static void			free_sbrk(t_malloc_header	*start,
   start->next = NULL;
   __break = sbrk(-(size - leftover));
   __break = (void*)((long)__break - (size - leftover));
-  return ;
 }
 
 static void			free_end(t_malloc_header	*start,
@@ -50,6 +49,14 @@ static void			free_end(t_malloc_header	*start,
   start->size = ((long)(end + 1) + end->size -
 		 ((long)start + sizeof(*start)));
   start->next = NULL;
+}
+
+void				free_middle(t_malloc_header		*start,
+					    t_malloc_header		*end)
+{
+  start->size = ((long)end - ((long)start + sizeof(*start)));
+  start->next = end;
+  end->previous = start;
 }
 
 void				free(void	*ptr)
@@ -71,11 +78,7 @@ void				free(void	*ptr)
   if (start->previous == NULL && (end == NULL || end->next == NULL))
     __malloc_head = NULL;
   if (!end->next && end->free)
-    {
-      free_end(start, end);
-      return ;
-    }
-  start->size = ((long)end - ((long)start + sizeof(*start)));
-  start->next = end;
-  end->previous = start;
+    free_end(start, end);
+  else
+    free_middle(start, end);
 }
