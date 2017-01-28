@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Fri Jan 27 12:49:52 2017 timothee.puentes
+** Last update Fri Jan 27 17:26:12 2017 timothee.puentes
 */
 
 #ifndef MY_MALLOC_H
@@ -14,6 +14,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdbool.h>
+# include <pthread.h>
 
 typedef struct			s_malloc_header
 {
@@ -28,6 +29,7 @@ typedef struct			s_malloc_header
 extern t_malloc_header	*__malloc_head;
 extern size_t		__pageSize;
 extern void		*__break;
+extern pthread_mutex_t	__malloc_mutex;
 
 void			*calloc(size_t		nmemb,
 				size_t		size);

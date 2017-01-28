@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Fri Jan 27 12:49:37 2017 timothee.puentes
+** Last update Sat Jan 28 11:20:39 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -13,42 +13,7 @@
 t_malloc_header		*__malloc_head;
 size_t			__pageSize;
 void			*__break;
-
-void				*calloc(size_t		nmemb,
-					size_t		size)
-{
-  char				*ptr;
-  size_t			it;
-
-  it = 0;
-  if ((ptr = malloc(nmemb * size)))
-    {
-      while (it < size * nmemb)
-	{
-	  ptr[it] = 0;
-	  it++;
-	}
-    }
-  return ((void*)ptr);
-}
-
-void				show_alloc_mem()
-{
-  t_malloc_header		*ptr;
-
-  ptr = __malloc_head;
-  if (__break == NULL)
-    __break = sbrk(0);
-  printf("break: %p\n", __break);
-  while (ptr)
-    {
-      if (!ptr->free)
-	printf("%p - %p : %ld bytes\n",
-	       ptr + 1, (void*)((long)ptr + sizeof(*ptr) + ptr->size)
-	       , ptr->size);
-      ptr = ptr->next;
-    }
-}
+pthread_mutex_t		__malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void			add_free_space(t_malloc_header	*ptr2,
 					       t_malloc_header	*ptr,
@@ -68,18 +33,10 @@ static void			add_free_space(t_malloc_header	*ptr2,
     ptr2->size = (long)__break - ((long)ptr2 + sizeof(*ptr2));
 }
 
-static void			*malloc_at_end(size_t		size,
-					       t_malloc_header	*ptr)
+static void			*malloc_at_end_list(t_malloc_header	*ptr,
+						    t_malloc_header	*ptr2,
+						    size_t		size)
 {
-  size_t			nb_pages;
-  t_malloc_header		*ptr2;
-
-  nb_pages = ((ptr && ptr->free) ? (size - ptr->size) :
-	      (sizeof(*ptr) + size));
-  nb_pages = (nb_pages / __pageSize) + 1;
-  if (!(ptr2 = sbrk(nb_pages * __pageSize)))
-    return (NULL);
-  __break = (void*)((long)ptr2 + (nb_pages * __pageSize));
   if (ptr && ptr->free)
     {
       ptr2 = ptr;
@@ -92,22 +49,33 @@ static void			*malloc_at_end(size_t		size,
   else
     ptr->next = ptr2;
   add_free_space(ptr2, ptr, size);
+  pthread_mutex_unlock(&__malloc_mutex);
   return (ptr2 + 1);
 }
 
-void				*malloc(size_t	size)
+static void			*malloc_at_end(size_t		size,
+					       t_malloc_header	*ptr)
 {
-  t_malloc_header		*ptr;
+  size_t			nb_pages;
   t_malloc_header		*ptr2;
 
-  if (__pageSize == 0)
-    __pageSize = getpagesize();
-  ptr = __malloc_head;
-  while (ptr != NULL && ptr->next != NULL &&
-	 !(ptr->size >= size && ptr->free))
-    ptr = ptr->next;
-  if (ptr == NULL || ptr->next == NULL)
-    return (malloc_at_end(size, ptr));
+  nb_pages = ((ptr && ptr->free) ? (size - ptr->size) :
+	      (sizeof(*ptr) + size));
+  nb_pages = (nb_pages / __pageSize) + 1;
+  if (!(ptr2 = sbrk(nb_pages * __pageSize)))
+    {
+      pthread_mutex_unlock(&__malloc_mutex);
+      return (NULL);
+    }
+  __break = (void*)((long)ptr2 + (nb_pages * __pageSize));
+  return (malloc_at_end_list(ptr, ptr2, size));
+}
+
+static void			*malloc_reuse_space(t_malloc_header	*ptr,
+						    size_t		size)
+{
+  t_malloc_header		*ptr2;
+
   if (size + sizeof(t_malloc_header) < ptr->size)
     {
       ptr2 = (void*)((long)(ptr + 1) + size);
@@ -121,5 +89,22 @@ void				*malloc(size_t	size)
       ptr->size = size;
     }
   ptr->free = false;
+  pthread_mutex_unlock(&__malloc_mutex);
   return (ptr + 1);
+}
+
+void				*malloc(size_t	size)
+{
+  t_malloc_header		*ptr;
+
+  if (__pageSize == 0)
+    __pageSize = getpagesize();
+  pthread_mutex_lock(&__malloc_mutex);
+  ptr = __malloc_head;
+  while (ptr != NULL && ptr->next != NULL &&
+	 !(ptr->size >= size && ptr->free))
+    ptr = ptr->next;
+  if (ptr == NULL || ptr->next == NULL)
+    return (malloc_at_end(size, ptr));
+  return (malloc_reuse_space(ptr, size));
 }

@@ -5,12 +5,13 @@
 ## Login   <puente_t@epitech.net>
 ## 
 ## Started on  Fri Jan 27 16:37:49 2017 timothee.puentes
-## Last update Fri Jan 27 16:37:50 2017 timothee.puentes
+## Last update Sat Jan 28 11:16:27 2017 timothee.puentes
 ##
 
 NAME		=	libmy_malloc.so
 
-SRCS		=	malloc.c realloc.c realloc_sup.c free.c
+SRCS		=	malloc.c realloc.c realloc_sup.c free.c \
+			calloc.c show_malloc.c
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -18,7 +19,7 @@ CC		=	gcc
 
 RM		=	rm -f
 
-CFLAGS		+=	-g -Wall -Werror -Wextra -fpic
+CFLAGS		+=	-Wall -Werror -Wextra -lpthread -fpic
 
 all:		$(NAME)
 

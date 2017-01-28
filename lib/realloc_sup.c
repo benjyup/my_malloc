@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 11:06:39 2017 timothee.puentes
-** Last update Fri Jan 27 12:14:04 2017 timothee.puentes
+** Last update Sat Jan 28 11:20:16 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -13,6 +13,7 @@
 t_malloc_header		*__malloc_head;
 size_t			__pageSize;
 void			*__break;
+pthread_mutex_t		__malloc_mutex;
 
 static void			copy_data(t_malloc_header	*ptr,
 					  t_malloc_header	*ptr2)
@@ -50,6 +51,7 @@ static void			realloc_free_around_setup_free_space(size_t		size,
       freePart->next = end;
       freePart->previous = start;
       freePart->size = sizeAviable - size - sizeof(*start);
+      pthread_mutex_unlock(&__malloc_mutex);
       free(freePart + 1);
     }
   else
@@ -58,6 +60,7 @@ static void			realloc_free_around_setup_free_space(size_t		size,
       start->next = end;
       if (end)
 	end->previous = start;
+      pthread_mutex_unlock(&__malloc_mutex);
     }
 }
 
@@ -107,6 +110,12 @@ static void			*realloc_at_end(void			*ptrOri,
   return (ptrOri);
 }
 
+void				*realloc_malloc(size_t			size)
+{
+  pthread_mutex_unlock(&__malloc_mutex);
+  return (malloc(size));
+}
+
 void				*realloc_size_superior(void		*ptrOri,
 						       t_malloc_header	*ptr,
 						       size_t		size)
@@ -127,7 +136,7 @@ void				*realloc_size_superior(void		*ptrOri,
     }
   if (!ptr->next)
     return (realloc_at_end(ptrOri, ptr, sizeAviable, size));
-  else if (!(newPtr = malloc(size)))
+  else if (!(newPtr = realloc_malloc(size)))
     return (NULL);
   copy_data((void*)((long)newPtr - sizeof(t_malloc_header)), ptr);
   free(ptrOri);

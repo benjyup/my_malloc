@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 10:50:55 2017 timothee.puentes
-** Last update Fri Jan 27 12:50:02 2017 timothee.puentes
+** Last update Sat Jan 28 11:20:24 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -13,6 +13,7 @@
 t_malloc_header		*__malloc_head;
 size_t			__pageSize;
 void			*__break;
+pthread_mutex_t		__malloc_mutex;
 
 static void			free_sbrk(t_malloc_header	*start,
 					  size_t		size)
@@ -67,6 +68,7 @@ void				free(void	*ptr)
 
   if (ptr == NULL)
     return ;
+  pthread_mutex_lock(&__malloc_mutex);
   header = ptr - sizeof(*header);
   header->free = true;
   end = header;
@@ -81,4 +83,5 @@ void				free(void	*ptr)
     free_end(start, end);
   else
     free_middle(start, end);
+  pthread_mutex_unlock(&__malloc_mutex);
 }
