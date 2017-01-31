@@ -5,7 +5,7 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Sat Jan 28 11:20:02 2017 timothee.puentes
+** Last update Tue Jan 31 11:44:28 2017 peixot_b
 */
 
 #include "malloc.h"
@@ -61,4 +61,3 @@ void				*realloc(void	*ptrOri,
     tmp = ptrOri;
   return (tmp);
 }
-  
