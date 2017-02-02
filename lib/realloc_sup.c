@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 11:06:39 2017 timothee.puentes
-** Last update Sat Jan 28 11:20:16 2017 timothee.puentes
+** Last update Thu Feb  2 10:33:59 2017 Timothee Puentes
 */
 
 #include "malloc.h"
@@ -89,24 +89,29 @@ static void			*realloc_at_end(void			*ptrOri,
 						size_t			size)
 {
   t_malloc_header		*ptr2;
-  
-  sizeAviable = size - ptr->size;
-  if (!(__break = sbrk(sizeAviable / __pageSize + 1)))
+
+  sizeAviable = size - ((long)__break - (long)(ptr + 1));
+  sizeAviable = ((sizeAviable / __pageSize) + 1) * __pageSize;
+  if (!(__break = sbrk(sizeAviable)))
     return (NULL);
-  __break = (void*)((long)__break + sizeAviable / __pageSize + 1);
-  sizeAviable %= __pageSize;
+  __break = (void*)((long)__break + sizeAviable);
+  ptr->size = size;
   ptr2 = (void*)((long)(ptr + 1) + ptr->size);
+  sizeAviable = (long)__break - (long)ptr2;
   if (sizeAviable <= sizeof(*ptr))
     {
       ptr->size = size + sizeAviable;
-      ptr2->next = NULL;
-      ptr->next = ptr2;
-      ptr2->previous = ptr;
-      ptr2->free = true;
-      ptr2->size = sizeAviable - sizeof(*ptr);
+      ptr->next = NULL;
     }
   else
-    ptr->size = size;
+    {
+      ptr->next = ptr2;
+      ptr2->next = NULL;
+      ptr2->previous = ptr;
+      ptr2->free = true;
+      ptr2->size = (long)__break - (long)(ptr2 + 1);
+    }
+  pthread_mutex_unlock(&__malloc_mutex);
   return (ptrOri);
 }
 

@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Mon Jan 23 13:48:13 2017 Timothee Puentes
-** Last update Fri Jan 27 11:43:32 2017 timothee.puentes
+** Last update Thu Feb  2 10:26:08 2017 Timothee Puentes
 */
 
 #include "lib/malloc.h"
@@ -157,7 +157,13 @@ int		main(void)
       free(str0);
     }
   //return (0);
-  
+  char			*tmp = malloc(100);
+  show_alloc_mem(); 
+  printf("Tmp = %p\n", tmp);
+  tmp = realloc(tmp, 3009);
+  show_alloc_mem(); 
+  //return (0);
+  free(tmp);c
   c = 0;
   while (c < 25)
     {
