@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sat Jan 28 10:28:29 2017 timothee.puentes
-** Last update Thu Feb  2 10:00:40 2017 Timothee Puentes
+** Last update Thu Feb  2 12:43:36 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -22,10 +22,6 @@ void				show_alloc_mem()
     {
       if (!ptr->free)
 	printf("%p - %p : %ld bytes\n",
-	       ptr + 1, (void*)((long)ptr + sizeof(*ptr) + ptr->size)
-	       , ptr->size);
-      else
-	printf("%p - %p : %ld bytes freed\n",
 	       ptr + 1, (void*)((long)ptr + sizeof(*ptr) + ptr->size)
 	       , ptr->size);
       ptr = ptr->next;
