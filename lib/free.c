@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 10:50:55 2017 timothee.puentes
-** Last update Thu Feb  2 12:43:31 2017 timothee.puentes
+** Last update Thu Feb  2 12:58:09 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -83,5 +83,6 @@ void				free(void	*ptr)
     free_end(start, end);
   else
     free_middle(start, end);
+  //show_alloc_mem();
   pthread_mutex_unlock(&__malloc_mutex);
 }

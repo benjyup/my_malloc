@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Thu Feb  2 12:43:47 2017 timothee.puentes
+** Last update Thu Feb  2 13:00:20 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -76,7 +76,7 @@ static void			*malloc_reuse_space(t_malloc_header	*ptr,
 {
   t_malloc_header		*ptr2;
 
-  if (size + sizeof(t_malloc_header) < ptr->size)
+  if (ptr->size - size > sizeof(t_malloc_header))
     {
       ptr2 = (void*)((long)(ptr + 1) + size);
       ptr2->free = true;
@@ -99,6 +99,8 @@ void				*malloc(size_t	size)
 
   if (__pageSize == 0)
     __pageSize = getpagesize();
+  if (size == 0)
+    return (NULL);
   pthread_mutex_lock(&__malloc_mutex);
   ptr = __malloc_head;
   while (ptr != NULL && ptr->next != NULL &&

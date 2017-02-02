@@ -5,11 +5,7 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-<<<<<<< HEAD
-** Last update Thu Feb  2 12:43:54 2017 timothee.puentes
-=======
-** Last update Tue Jan 31 11:44:28 2017 peixot_b
->>>>>>> 4d3d8fc7709ccd2e48ada215b3313e7bf78a2f09
+** Last update Thu Feb  2 12:52:34 2017 timothee.puentes
 */
 
 #include "malloc.h"
