@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Thu Feb  2 13:00:20 2017 timothee.puentes
+** Last update Mon Feb  6 20:50:26 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -99,8 +99,6 @@ void				*malloc(size_t	size)
 
   if (__pageSize == 0)
     __pageSize = getpagesize();
-  if (size == 0)
-    return (NULL);
   pthread_mutex_lock(&__malloc_mutex);
   ptr = __malloc_head;
   while (ptr != NULL && ptr->next != NULL &&

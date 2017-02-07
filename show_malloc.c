@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sat Jan 28 10:28:29 2017 timothee.puentes
-** Last update Thu Feb  2 12:49:46 2017 timothee.puentes
+** Last update Mon Feb  6 20:45:19 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -17,15 +17,13 @@ void				show_alloc_mem()
   ptr = __malloc_head;
   if (__break == NULL)
     __break = sbrk(0);
-  //  printf("break: %p\n", __break);
+  printf("break: %p\n", __break);
   while (ptr)
     {
-      if (ptr->size == 0)
-	write(1, "NO\n", 3);
-      //if (!ptr->free)
-      //printf("%p - %p : %ld bytes\n",
-      //       ptr + 1, (void*)((long)ptr + sizeof(*ptr) + ptr->size)
-      //       , ptr->size);
+      if (!ptr->free)
+	printf("%p - %p : %ld bytes\n",
+	       ptr + 1, (void*)((long)ptr + sizeof(*ptr) + ptr->size)
+	       , ptr->size);
       ptr = ptr->next;
     }
 }

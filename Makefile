@@ -4,13 +4,14 @@
 ## Made by timothee.puentes
 ## Login   <puente_t@epitech.net>
 ## 
-## Started on  Thu Jan 26 13:59:10 2017 timothee.puentes
-## Last update Mon Jan 30 12:10:45 2017 timothee.puentes
+## Started on  Fri Jan 27 16:37:49 2017 timothee.puentes
+## Last update Sat Jan 28 11:16:27 2017 timothee.puentes
 ##
 
-NAME		=	test
+NAME		=	libmy_malloc.so
 
-SRCS		=	main.c
+SRCS		=	malloc.c realloc.c realloc_sup.c free.c \
+			calloc.c show_malloc.c
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -18,14 +19,12 @@ CC		=	gcc
 
 RM		=	rm -f
 
-LDFLAGS		=	lib/libmy_malloc.so
-
-CFLAGS		+=	-Wall -Werror -Wextra
+CFLAGS		+=	-Wall -Werror -Wextra -lpthread -fpic
 
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-		$(CC) -o $(NAME) $(OBJS) -fpic $(LDFLAGS)
+		$(CC) -shared -o $(NAME) $(OBJS)
 
 clean:
 		$(RM) $(OBJS)
