@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Fri Jan 27 17:26:12 2017 timothee.puentes
+** Last update Wed Feb  8 10:43:21 2017 timothee.puentes
 */
 
 #ifndef MY_MALLOC_H
@@ -22,14 +22,12 @@ typedef struct			s_malloc_header
   char				free;
   struct s_malloc_header	*next;
   struct s_malloc_header	*previous;
-}				t_malloc_header;
+}				__attribute__((packed)) t_malloc_header;
 
-//__attribute__((packed))
-
-extern t_malloc_header	*__malloc_head;
-extern size_t		__pageSize;
-extern void		*__break;
-extern pthread_mutex_t	__malloc_mutex;
+extern t_malloc_header	*gl_malloc_head;
+extern size_t		gl_pageSize;
+extern void		*gl_break;
+extern pthread_mutex_t	gl_malloc_mutex;
 
 void			*calloc(size_t		nmemb,
 				size_t		size);

@@ -5,35 +5,35 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 10:50:55 2017 timothee.puentes
-** Last update Mon Feb  6 20:45:49 2017 timothee.puentes
+** Last update Wed Feb  8 10:43:36 2017 timothee.puentes
 */
 
 #include "malloc.h"
 
-t_malloc_header		*__malloc_head;
-size_t			__pageSize;
-void			*__break;
-pthread_mutex_t		__malloc_mutex;
+t_malloc_header		*gl_malloc_head;
+size_t			gl_pageSize;
+void			*gl_break;
+pthread_mutex_t		gl_malloc_mutex;
 
 static void			free_sbrk(t_malloc_header	*start,
 					  size_t		size)
 {
   size_t			leftover;
 
-  leftover = size % __pageSize;
+  leftover = size % gl_pageSize;
   start->size = leftover;
   if ((leftover == 0 && start->previous) ||
       (leftover <= sizeof(t_malloc_header) && start->previous))
     start->previous->next = NULL;
   else if (leftover == 0)
-    __malloc_head = NULL;
+    gl_malloc_head = NULL;
   if (leftover <= sizeof(t_malloc_header) && start->previous)
     start->previous->size += leftover;
   else
     start->size -= sizeof(t_malloc_header);
   start->next = NULL;
-  __break = sbrk(-(size - leftover));
-  __break = (void*)((long)__break - (size - leftover));
+  gl_break = sbrk(-(size - leftover));
+  gl_break = (void*)((long)gl_break - (size - leftover));
 }
 
 static void			free_end(t_malloc_header	*start,
@@ -41,8 +41,8 @@ static void			free_end(t_malloc_header	*start,
 {
   size_t			size;
 
-  size = ((long)__break - (long)start);
-  if (size / __pageSize != 0)
+  size = ((long)gl_break - (long)start);
+  if (size / gl_pageSize != 0)
     {
       free_sbrk(start, size);
       return ;
@@ -68,7 +68,7 @@ void				free(void	*ptr)
 
   if (ptr == NULL)
     return ;
-  pthread_mutex_lock(&__malloc_mutex);
+  pthread_mutex_lock(&gl_malloc_mutex);
   header = ptr - sizeof(*header);
   header->free = true;
   end = header;
@@ -78,10 +78,10 @@ void				free(void	*ptr)
   while (start->previous != NULL && start->previous->free)
     start = start->previous; 
   if (start->previous == NULL && (end == NULL || end->next == NULL))
-    __malloc_head = NULL;
+    gl_malloc_head = NULL;
   if (!end->next && end->free)
     free_end(start, end);
   else
     free_middle(start, end);
-  pthread_mutex_unlock(&__malloc_mutex);
+  pthread_mutex_unlock(&gl_malloc_mutex);
 }

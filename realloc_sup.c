@@ -5,15 +5,15 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 11:06:39 2017 timothee.puentes
-** Last update Thu Feb  2 10:33:59 2017 Timothee Puentes
+** Last update Wed Feb  8 10:44:02 2017 timothee.puentes
 */
 
 #include "malloc.h"
 
-t_malloc_header		*__malloc_head;
-size_t			__pageSize;
-void			*__break;
-pthread_mutex_t		__malloc_mutex;
+t_malloc_header		*gl_malloc_head;
+size_t			gl_pageSize;
+void			*gl_break;
+pthread_mutex_t		gl_malloc_mutex;
 
 static void			copy_data(t_malloc_header	*ptr,
 					  t_malloc_header	*ptr2)
@@ -51,7 +51,7 @@ static void			realloc_free_around_setup_free_space(size_t		size,
       freePart->next = end;
       freePart->previous = start;
       freePart->size = sizeAviable - size - sizeof(*start);
-      pthread_mutex_unlock(&__malloc_mutex);
+      pthread_mutex_unlock(&gl_malloc_mutex);
       free(freePart + 1);
     }
   else
@@ -60,7 +60,7 @@ static void			realloc_free_around_setup_free_space(size_t		size,
       start->next = end;
       if (end)
 	end->previous = start;
-      pthread_mutex_unlock(&__malloc_mutex);
+      pthread_mutex_unlock(&gl_malloc_mutex);
     }
 }
 
@@ -90,14 +90,14 @@ static void			*realloc_at_end(void			*ptrOri,
 {
   t_malloc_header		*ptr2;
 
-  sizeAviable = size - ((long)__break - (long)(ptr + 1));
-  sizeAviable = ((sizeAviable / __pageSize) + 1) * __pageSize;
-  if (!(__break = sbrk(sizeAviable)))
+  sizeAviable = size - ((long)gl_break - (long)(ptr + 1));
+  sizeAviable = ((sizeAviable / gl_pageSize) + 1) * gl_pageSize;
+  if (!(gl_break = sbrk(sizeAviable)))
     return (NULL);
-  __break = (void*)((long)__break + sizeAviable);
+  gl_break = (void*)((long)gl_break + sizeAviable);
   ptr->size = size;
   ptr2 = (void*)((long)(ptr + 1) + ptr->size);
-  sizeAviable = (long)__break - (long)ptr2;
+  sizeAviable = (long)gl_break - (long)ptr2;
   if (sizeAviable <= sizeof(*ptr))
     {
       ptr->size = size + sizeAviable;
@@ -109,15 +109,15 @@ static void			*realloc_at_end(void			*ptrOri,
       ptr2->next = NULL;
       ptr2->previous = ptr;
       ptr2->free = true;
-      ptr2->size = (long)__break - (long)(ptr2 + 1);
+      ptr2->size = (long)gl_break - (long)(ptr2 + 1);
     }
-  pthread_mutex_unlock(&__malloc_mutex);
+  pthread_mutex_unlock(&gl_malloc_mutex);
   return (ptrOri);
 }
 
 void				*realloc_malloc(size_t			size)
 {
-  pthread_mutex_unlock(&__malloc_mutex);
+  pthread_mutex_unlock(&gl_malloc_mutex);
   return (malloc(size));
 }
 

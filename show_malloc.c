@@ -5,19 +5,22 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sat Jan 28 10:28:29 2017 timothee.puentes
-** Last update Mon Feb  6 20:45:19 2017 timothee.puentes
+** Last update Wed Feb  8 10:42:54 2017 timothee.puentes
 */
 
 #include "malloc.h"
+
+t_malloc_header		*gl_malloc_head;
+void			*gl_break;
 
 void				show_alloc_mem()
 {
   t_malloc_header		*ptr;
 
-  ptr = __malloc_head;
-  if (__break == NULL)
-    __break = sbrk(0);
-  printf("break: %p\n", __break);
+  ptr = gl_malloc_head;
+  if (gl_break == NULL)
+    gl_break = sbrk(0);
+  printf("break: %p\n", gl_break);
   while (ptr)
     {
       if (!ptr->free)
