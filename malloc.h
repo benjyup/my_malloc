@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Wed Feb  8 10:43:21 2017 timothee.puentes
+** Last update Thu Feb  9 16:43:48 2017 timothee.puentes
 */
 
 #ifndef MY_MALLOC_H
@@ -27,7 +27,7 @@ typedef struct			s_malloc_header
 extern t_malloc_header	*gl_malloc_head;
 extern size_t		gl_pageSize;
 extern void		*gl_break;
-extern pthread_mutex_t	gl_malloc_mutex;
+extern pthread_mutex_t 	gl_malloc_mutex;
 
 void			*calloc(size_t		nmemb,
 				size_t		size);

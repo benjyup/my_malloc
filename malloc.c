@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Wed Feb  8 10:43:04 2017 timothee.puentes
+** Last update Thu Feb  9 16:26:14 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -97,6 +97,8 @@ void				*malloc(size_t	size)
 {
   t_malloc_header		*ptr;
 
+  if (size == 0)
+    size = 1;
   if (gl_pageSize == 0)
     gl_pageSize = getpagesize();
   pthread_mutex_lock(&gl_malloc_mutex);

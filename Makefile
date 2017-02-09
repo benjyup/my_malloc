@@ -5,7 +5,7 @@
 ## Login   <puente_t@epitech.net>
 ## 
 ## Started on  Fri Jan 27 16:37:49 2017 timothee.puentes
-## Last update Sat Jan 28 11:16:27 2017 timothee.puentes
+## Last update Thu Feb  9 16:41:19 2017 timothee.puentes
 ##
 
 NAME		=	libmy_malloc.so
@@ -19,7 +19,7 @@ CC		=	gcc
 
 RM		=	rm -f
 
-CFLAGS		+=	-Wall -Werror -Wextra -lpthread -fpic
+CFLAGS		+=	-Wall -Werror -Wextra -fpic
 
 all:		$(NAME)
 
