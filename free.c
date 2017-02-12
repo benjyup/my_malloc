@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 10:50:55 2017 timothee.puentes
-** Last update Wed Feb  8 10:43:36 2017 timothee.puentes
+** Last update Sun Feb 12 22:00:53 2017 peixot_b
 */
 
 #include "malloc.h"
@@ -15,8 +15,8 @@ size_t			gl_pageSize;
 void			*gl_break;
 pthread_mutex_t		gl_malloc_mutex;
 
-static void			free_sbrk(t_malloc_header	*start,
-					  size_t		size)
+static void			free_sbrk(t_malloc_header *start,
+					  size_t size)
 {
   size_t			leftover;
 
@@ -36,8 +36,8 @@ static void			free_sbrk(t_malloc_header	*start,
   gl_break = (void*)((long)gl_break - (size - leftover));
 }
 
-static void			free_end(t_malloc_header	*start,
-					 t_malloc_header	*end)
+static void			free_end(t_malloc_header *start,
+					 t_malloc_header *end)
 {
   size_t			size;
 
@@ -52,15 +52,15 @@ static void			free_end(t_malloc_header	*start,
   start->next = NULL;
 }
 
-void				free_middle(t_malloc_header		*start,
-					    t_malloc_header		*end)
+void				free_middle(t_malloc_header *start,
+					    t_malloc_header *end)
 {
   start->size = ((long)end - ((long)start + sizeof(*start)));
   start->next = end;
   end->previous = start;
 }
 
-void				free(void	*ptr)
+void				free(void *ptr)
 {
   t_malloc_header		*header;
   t_malloc_header		*end;

@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:33 2017 Timothee Puentes
-** Last update Thu Feb  9 16:26:14 2017 timothee.puentes
+** Last update Sun Feb 12 22:02:22 2017 peixot_b
 */
 
 #include "malloc.h"
@@ -15,9 +15,9 @@ size_t			gl_pageSize;
 void			*gl_break;
 pthread_mutex_t		gl_malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void			add_free_space(t_malloc_header	*ptr2,
-					       t_malloc_header	*ptr,
-					       size_t		size)
+static void			add_free_space(t_malloc_header *ptr2,
+					       t_malloc_header *ptr,
+					       size_t size)
 {
   if ((size_t)gl_break > sizeof(*ptr2) + (long)ptr2 + sizeof(*ptr2) + size)
     {
@@ -33,9 +33,9 @@ static void			add_free_space(t_malloc_header	*ptr2,
     ptr2->size = (long)gl_break - ((long)ptr2 + sizeof(*ptr2));
 }
 
-static void			*malloc_at_end_list(t_malloc_header	*ptr,
-						    t_malloc_header	*ptr2,
-						    size_t		size)
+static void			*malloc_at_end_list(t_malloc_header *ptr,
+						    t_malloc_header *ptr2,
+						    size_t size)
 {
   if (ptr && ptr->free)
     {
@@ -53,8 +53,8 @@ static void			*malloc_at_end_list(t_malloc_header	*ptr,
   return (ptr2 + 1);
 }
 
-static void			*malloc_at_end(size_t		size,
-					       t_malloc_header	*ptr)
+static void			*malloc_at_end(size_t size,
+					       t_malloc_header *ptr)
 {
   size_t			nb_pages;
   t_malloc_header		*ptr2;
@@ -71,8 +71,8 @@ static void			*malloc_at_end(size_t		size,
   return (malloc_at_end_list(ptr, ptr2, size));
 }
 
-static void			*malloc_reuse_space(t_malloc_header	*ptr,
-						    size_t		size)
+static void			*malloc_reuse_space(t_malloc_header *ptr,
+						    size_t size)
 {
   t_malloc_header		*ptr2;
 
@@ -93,7 +93,7 @@ static void			*malloc_reuse_space(t_malloc_header	*ptr,
   return (ptr + 1);
 }
 
-void				*malloc(size_t	size)
+void				*malloc(size_t size)
 {
   t_malloc_header		*ptr;
 

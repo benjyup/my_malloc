@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sun Jan 22 15:12:49 2017 Timothee Puentes
-** Last update Thu Feb  9 16:43:48 2017 timothee.puentes
+** Last update Sun Feb 12 22:03:32 2017 peixot_b
 */
 
 #ifndef MY_MALLOC_H
@@ -29,19 +29,19 @@ extern size_t		gl_pageSize;
 extern void		*gl_break;
 extern pthread_mutex_t 	gl_malloc_mutex;
 
-void			*calloc(size_t		nmemb,
-				size_t		size);
+void			*calloc(size_t nmemb,
+				size_t size);
 
-void			*malloc(size_t		size);
+void			*malloc(size_t size);
 
-void			*realloc(void		*ptr,
-				 size_t		size);
+void			*realloc(void *ptr,
+				 size_t size);
 
-void			*realloc_size_superior(void		*ptrOri,
-					       t_malloc_header	*ptr,
-					       size_t		size);
+void			*realloc_size_superior(void *ptrOri,
+					       t_malloc_header *ptr,
+					       size_t size);
 
-void			free(void		*ptr);
+void			free(void *ptr);
 
 void			show_alloc_mem();
 

@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 11:06:39 2017 timothee.puentes
-** Last update Wed Feb  8 10:44:02 2017 timothee.puentes
+** Last update Sun Feb 12 22:05:59 2017 peixot_b
 */
 
 #include "malloc.h"
@@ -15,8 +15,8 @@ size_t			gl_pageSize;
 void			*gl_break;
 pthread_mutex_t		gl_malloc_mutex;
 
-static void			copy_data(t_malloc_header	*ptr,
-					  t_malloc_header	*ptr2)
+static void			copy_data(t_malloc_header *ptr,
+					  t_malloc_header *ptr2)
 {
   char				*ptrIt;
   char				*ptr2It;
@@ -34,10 +34,10 @@ static void			copy_data(t_malloc_header	*ptr,
     }
 }
 
-static void			realloc_free_around_setup_free_space(size_t		size,
-								     size_t		sizeAviable,
-								     t_malloc_header	*start,
-								     t_malloc_header	*end)
+static void			realloc_free_around_setup_free_space(size_t size,
+								     size_t sizeAviable,
+								     t_malloc_header *start,
+								     t_malloc_header *end)
 {
   t_malloc_header		*freePart;
   
@@ -64,9 +64,9 @@ static void			realloc_free_around_setup_free_space(size_t		size,
     }
 }
 
-static void			*realloc_free_around(t_malloc_header	*ptr,
-						     size_t		size,
-						     size_t		sizeAviable)
+static void			*realloc_free_around(t_malloc_header *ptr,
+						     size_t size,
+						     size_t sizeAviable)
 {
   t_malloc_header		*start;
   t_malloc_header		*end;
@@ -83,10 +83,10 @@ static void			*realloc_free_around(t_malloc_header	*ptr,
   return (start + 1);
 }
 
-static void			*realloc_at_end(void			*ptrOri,
-						t_malloc_header		*ptr,
-						size_t			sizeAviable,
-						size_t			size)
+static void			*realloc_at_end(void *ptrOri,
+						t_malloc_header 	*ptr,
+						size_t sizeAviable,
+						size_t size)
 {
   t_malloc_header		*ptr2;
 
@@ -115,15 +115,15 @@ static void			*realloc_at_end(void			*ptrOri,
   return (ptrOri);
 }
 
-void				*realloc_malloc(size_t			size)
+void				*realloc_malloc(size_t size)
 {
   pthread_mutex_unlock(&gl_malloc_mutex);
   return (malloc(size));
 }
 
-void				*realloc_size_superior(void		*ptrOri,
-						       t_malloc_header	*ptr,
-						       size_t		size)
+void				*realloc_size_superior(void *ptrOri,
+						       t_malloc_header *ptr,
+						       size_t size)
 {
   void				*newPtr;
   size_t			sizeAviable;

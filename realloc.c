@@ -5,16 +5,16 @@
 ** Login   <timothe.puentes@epitech.eu>
 ** 
 ** Started on  Tue Jan 24 16:59:53 2017 timothee.puentes
-** Last update Wed Feb  8 10:43:43 2017 timothee.puentes
+** Last update Sun Feb 12 22:04:07 2017 peixot_b
 */
 
 #include "malloc.h"
 
 pthread_mutex_t		gl_malloc_mutex;
 
-static void			*realloc_size_inferior(void		*ptrOri,
-						       t_malloc_header	*ptr,
-						       size_t		size)
+static void			*realloc_size_inferior(void *ptrOri,
+						       t_malloc_header *ptr,
+						       size_t size)
 {
   t_malloc_header		*ptr2;
   
@@ -37,8 +37,8 @@ static void			*realloc_size_inferior(void		*ptrOri,
   return (ptr + 1);
 }
 
-void				*realloc(void	*ptrOri,
-					 size_t	size)
+void				*realloc(void *ptrOri,
+					 size_t size)
 {
   t_malloc_header		*ptr;
   void				*tmp;

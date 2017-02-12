@@ -5,13 +5,13 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Sat Jan 28 10:29:02 2017 timothee.puentes
-** Last update Wed Feb  8 17:05:48 2017 timothee.puentes
+** Last update Sun Feb 12 21:59:58 2017 peixot_b
 */
 
 #include "malloc.h"
 
-void				*calloc(size_t		nmemb,
-					size_t		size)
+void				*calloc(size_t nmemb,
+					size_t size)
 {
   char				*ptr;
   size_t			it;
