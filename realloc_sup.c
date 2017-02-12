@@ -5,7 +5,7 @@
 ** Login   <puente_t@epitech.net>
 ** 
 ** Started on  Fri Jan 27 11:06:39 2017 timothee.puentes
-** Last update Sun Feb 12 22:05:59 2017 peixot_b
+** Last update Sun Feb 12 22:11:12 2017 timothee.puentes
 */
 
 #include "malloc.h"
@@ -115,12 +115,6 @@ static void			*realloc_at_end(void *ptrOri,
   return (ptrOri);
 }
 
-void				*realloc_malloc(size_t size)
-{
-  pthread_mutex_unlock(&gl_malloc_mutex);
-  return (malloc(size));
-}
-
 void				*realloc_size_superior(void *ptrOri,
 						       t_malloc_header *ptr,
 						       size_t size)
@@ -141,7 +135,8 @@ void				*realloc_size_superior(void *ptrOri,
     }
   if (!ptr->next)
     return (realloc_at_end(ptrOri, ptr, sizeAviable, size));
-  else if (!(newPtr = realloc_malloc(size)))
+  pthread_mutex_unlock(&gl_malloc_mutex);
+  if (!(newPtr = malloc(size)))
     return (NULL);
   copy_data((void*)((long)newPtr - sizeof(t_malloc_header)), ptr);
   free(ptrOri);
